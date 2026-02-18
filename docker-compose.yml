@@ -1,0 +1,46 @@
+version: '3.8'
+services:
+  cassandra:
+    image: cassandra:4.1
+    ports:
+      - "9042:9042"
+    healthcheck:
+      test: ["CMD", "cqlsh", "-e", "describe keyspaces"]
+      interval: 30s
+      retries: 10
+
+  expense-service:
+    build: ./expense-service
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_CASSANDRA_CONTACT_POINTS: cassandra
+      SPRING_CASSANDRA_PORT: 9042
+      SPRING_CASSANDRA_KEYSPACE_NAME: payflow
+      SPRING_CASSANDRA_LOCAL_DATACENTER: datacenter1
+    depends_on:
+      cassandra:
+        condition: service_healthy
+
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "8000:8000"
+    environment:
+      EXPENSE_SERVICE_URL: http://expense-service:8080
+    depends_on:
+      - expense-service
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+
+  frontend:
+    build: ./payflow-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - api-gateway
