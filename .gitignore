@@ -1,31 +1,7 @@
-# Java
-payment-service/target/
-payment-service/*.class
-*.jar
-*.war
-
-# Python
+node_modules/
+target/
 __pycache__/
-*.py[cod]
-*.pyo
-.pytest_cache/
-.venv/
-venv/
-*.egg-info/
-dist/
-build/
-
-# IDE
-.idea/
-.vscode/
-*.iml
-
-# OS
+.env
+*.class
 .DS_Store
-Thumbs.db
-
-# Docker
-.docker/
-
-# Logs
-*.log
+dist/
