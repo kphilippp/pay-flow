@@ -1,6 +1,5 @@
 package com.payflow.config;
 
-import com.datastax.oss.driver.api.core.CqlSession;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -65,7 +64,7 @@ public class CassandraConfig extends AbstractCassandraConfiguration {
     }
 
     @Override
-    protected SchemaAction getSchemaAction() {
+    public SchemaAction getSchemaAction() {
         return SchemaAction.CREATE_IF_NOT_EXISTS;
     }
 }
