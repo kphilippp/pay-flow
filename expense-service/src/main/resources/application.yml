@@ -1,0 +1,15 @@
+spring:
+  cassandra:
+    contact-points: ${SPRING_CASSANDRA_CONTACT_POINTS:localhost}
+    port: ${SPRING_CASSANDRA_PORT:9042}
+    keyspace-name: ${SPRING_CASSANDRA_KEYSPACE_NAME:payflow}
+    local-datacenter: ${SPRING_CASSANDRA_LOCAL_DATACENTER:datacenter1}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true
