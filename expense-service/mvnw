@@ -1,0 +1,43 @@
+#!/bin/sh
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.
+
+set -e
+
+# OS specific support
+cygwin=false
+darwin=false
+mingw=false
+msys=false
+case "$(uname)" in
+  CYGWIN*)  cygwin=true ;;
+  Darwin*)  darwin=true ;;
+  MINGW*)   mingw=true ;;
+  MSYS*)    msys=true ;;
+esac
+
+APP_HOME="$(cd "$(dirname "$0")" && pwd)"
+MAVEN_WRAPPER_PROPERTIES="$APP_HOME/.mvn/wrapper/maven-wrapper.properties"
+
+if [ -f "$MAVEN_WRAPPER_PROPERTIES" ]; then
+  DISTRIBUTION_URL=$(grep 'distributionUrl' "$MAVEN_WRAPPER_PROPERTIES" | cut -d'=' -f2)
+fi
+
+MAVEN_USER_HOME="${MAVEN_USER_HOME:-$HOME/.m2}"
+MAVEN_HOME="$MAVEN_USER_HOME/wrapper/dists/apache-maven-3.9.6-bin/apache-maven-3.9.6"
+
+if [ ! -f "$MAVEN_HOME/bin/mvn" ]; then
+  mkdir -p "$(dirname "$MAVEN_HOME")"
+  TMP_DOWNLOAD_DIR=$(mktemp -d)
+  ZIP_FILE="$TMP_DOWNLOAD_DIR/apache-maven-3.9.6-bin.zip"
+  echo "Downloading Apache Maven 3.9.6..."
+  if command -v curl >/dev/null 2>&1; then
+    curl -fsSL "https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/3.9.6/apache-maven-3.9.6-bin.zip" -o "$ZIP_FILE"
+  elif command -v wget >/dev/null 2>&1; then
+    wget -q "https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/3.9.6/apache-maven-3.9.6-bin.zip" -O "$ZIP_FILE"
+  fi
+  unzip -q "$ZIP_FILE" -d "$(dirname "$MAVEN_HOME")"
+  rm -rf "$TMP_DOWNLOAD_DIR"
+fi
+
+exec "$MAVEN_HOME/bin/mvn" "$@"
